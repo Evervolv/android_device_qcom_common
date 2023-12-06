@@ -1,3 +1,7 @@
+# Linker config
+PRODUCT_VENDOR_LINKER_CONFIG_FRAGMENTS += \
+    $(LOCAL_PATH)/linker.config.json
+
 # RFS APQ GNSS symlinks
 PRODUCT_PACKAGES += \
     rfs_apq_gnss_hlos_symlink \
