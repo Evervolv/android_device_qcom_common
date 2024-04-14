@@ -11,6 +11,7 @@ UM_4_19_FAMILY := kona lito bengal
 UM_5_4_FAMILY := lahaina holi
 UM_5_10_FAMILY := taro parrot
 UM_5_15_FAMILY := kalama crow
+UM_6_1_FAMILY := pineapple volcano
 
 LEGACY_UM_PLATFORMS := \
     $(UM_3_18_FAMILY) \
@@ -28,7 +29,8 @@ UM_PLATFORMS := \
     $(UM_4_19_FAMILY) \
     $(UM_5_4_FAMILY) \
     $(UM_5_10_FAMILY) \
-    $(UM_5_15_FAMILY)
+    $(UM_5_15_FAMILY) \
+    $(UM_6_1_FAMILY)
 
 # Upgraded legacy families
 UM_4_9_LEGACY_FAMILY :=
@@ -49,5 +51,6 @@ QSSI_SUPPORTED_PLATFORMS := \
     $(UM_4_19_LEGACY_FAMILY) \
     $(UM_5_4_FAMILY) \
     $(UM_5_10_FAMILY) \
-    $(UM_5_15_FAMILY)
+    $(UM_5_15_FAMILY) \
+    $(UM_6_1_FAMILY)
 
