@@ -11,11 +11,8 @@ MASTER_SIDE_CP_TARGET_LIST := msm8996 $(UM_4_4_FAMILY) $(UM_4_9_FAMILY) $(UM_4_1
 TARGET_USES_MEDIA_EXTENSIONS := true
 
 # Display
-BOARD_USES_ADRENO ?= true
-TARGET_USES_COLOR_METADATA ?= true
-TARGET_USES_DRM_PP ?= $(if $(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),true,false)
-TARGET_USES_GRALLOC4 ?= $(if $(filter $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),true,false)
-TARGET_USES_FOD_ZPOS ?= false
+BOARD_USES_ADRENO := true
+TARGET_USES_COLOR_METADATA := true
 $(call soong_config_set,qtidisplay,headless,false)
 $(call soong_config_set,qtidisplay,llvmsa,false)
 $(call soong_config_set,qtidisplay,default,true)
