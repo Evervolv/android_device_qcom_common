@@ -18,7 +18,6 @@ TARGET_USES_COLOR_METADATA ?= true
 TARGET_USES_DRM_PP ?= $(if $(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),true,false)
 TARGET_USES_GRALLOC4 ?= $(if $(filter $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),true,false)
 TARGET_USES_FOD_ZPOS ?= false
-TARGET_HAS_WIDE_COLOR_DISPLAY ?= $(if $(filter $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),true,false)
 $(call soong_config_set,qtidisplay,headless,false)
 $(call soong_config_set,qtidisplay,llvmsa,false)
 $(call soong_config_set,qtidisplay,default,true)
@@ -31,7 +30,6 @@ $(call soong_config_set,qtidisplay,gralloc4,$(TARGET_USES_GRALLOC4))
 $(call soong_config_set,qtidisplay,udfps,$(TARGET_USES_FOD_ZPOS))
 $(call soong_config_set,qtidisplay,shift_horizontal,$(TARGET_DISPLAY_SHIFT_HORIZONTAL))
 $(call soong_config_set,qtidisplay,shift_vertical,$(TARGET_DISPLAY_SHIFT_VERTICAL))
-$(call soong_config_set,qtidisplay,wide_color,$(TARGET_HAS_WIDE_COLOR_DISPLAY))
 
 # Gralloc
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS ?= 0
