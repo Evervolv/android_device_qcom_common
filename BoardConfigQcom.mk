@@ -68,6 +68,7 @@ SOONG_CONFIG_NAMESPACES += qtidisplay
 
 # Add supported variables to qtidisplay config
 SOONG_CONFIG_qtidisplay += \
+    composer_version \
     drmpp \
     headless \
     llvmsa \
@@ -82,6 +83,9 @@ SOONG_CONFIG_qtidisplay += \
     var1 \
     var2 \
     var3 \
+    hwasan \
+    llvmcov \
+    mapper_ext \
     ubwcp_headers \
     wide_color \
     target_kernel_version \
@@ -94,6 +98,7 @@ SOONG_CONFIG_qtidisplay += \
     target_uses_ycrcb_venus_camera_preview
 
 # Set default values for qtidisplay config
+SOONG_CONFIG_qtidisplay_composer_version ?= v3_3
 SOONG_CONFIG_qtidisplay_drmpp ?= false
 SOONG_CONFIG_qtidisplay_headless ?= false
 SOONG_CONFIG_qtidisplay_llvmsa ?= false
@@ -108,6 +113,9 @@ SOONG_CONFIG_qtidisplay_smmu_proxy ?= false
 SOONG_CONFIG_qtidisplay_var1 ?= false
 SOONG_CONFIG_qtidisplay_var2 ?= false
 SOONG_CONFIG_qtidisplay_var3 ?= false
+SOONG_CONFIG_qtidisplay_hwasan ?= false
+SOONG_CONFIG_qtidisplay_llvmcov ?= false
+SOONG_CONFIG_qtidisplay_mapper_ext ?= true
 SOONG_CONFIG_qtidisplay_ubwcp_headers ?= false
 SOONG_CONFIG_qtidisplay_wide_color ?= false
 SOONG_CONFIG_qtidisplay_target_kernel_version ?= 0
@@ -181,18 +189,18 @@ ifneq ($(filter msm8937 msm8953 msm8996,$(TARGET_BOARD_PLATFORM)),)
 endif
 
 # Enable DRM PP driver on UM platforms that support it
-ifneq ($(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     SOONG_CONFIG_qtidisplay_drmpp := true
     TARGET_USES_DRM_PP := true
 endif
 
 # Enable Gralloc4 on UM platforms that support it
-ifneq ($(filter $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     SOONG_CONFIG_qtidisplay_gralloc4 := true
 endif
 
 # Select AR variant of A-HAL dependencies
-ifneq ($(filter $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     TARGET_USES_QCOM_AUDIO_AR ?= true
 endif
 
@@ -202,12 +210,12 @@ ifeq ($(filter $(UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
 endif
 
 # Enable SMMU proxy on UM platforms that support it
-ifneq ($(filter $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     SOONG_CONFIG_qtidisplay_smmu_proxy := true
 endif
 
 # Expose UBWCP headers to UM platforms that require it
-ifneq ($(filter $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     SOONG_CONFIG_qtidisplay_ubwcp_headers := true
 endif
 
@@ -220,7 +228,7 @@ TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS += | (1 << 13)
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS += | (1 << 21)
 
 # Mark GRALLOC_USAGE_PRIVATE_HEIF_VIDEO as valid gralloc bit on UM platforms that support it
-ifneq ($(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS += | (1 << 27)
 endif
 
@@ -231,12 +239,12 @@ ifneq ($(filter $(MASTER_SIDE_CP_TARGET_LIST),$(TARGET_BOARD_PLATFORM)),)
 endif
 
 # Opt-in for old rmnet_data driver
-ifeq ($(filter $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifeq ($(filter $(UM_5_15_FAMILY) $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     $(call soong_config_set,rmnetctl,old_rmnet_data,true)
 endif
 
 # Use full QTI gralloc struct for GKI 2.0 targets
-ifneq ($(filter $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     TARGET_GRALLOC_HANDLE_HAS_CUSTOM_CONTENT_MD_RESERVED_SIZE ?= true
     TARGET_GRALLOC_HANDLE_HAS_RESERVED_SIZE ?= true
 else
@@ -245,7 +253,7 @@ else
 endif
 
 # Use QTI gralloc UBWCP struct
-ifneq ($(filter $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     TARGET_GRALLOC_HANDLE_HAS_UBWCP_FORMAT ?= true
 else
     TARGET_GRALLOC_HANDLE_HAS_UBWCP_FORMAT ?= false

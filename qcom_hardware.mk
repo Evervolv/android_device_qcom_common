@@ -30,6 +30,8 @@ else ifneq ($(filter $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     QCOM_HARDWARE_VARIANT := sm8550
 else ifneq ($(filter $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     QCOM_HARDWARE_VARIANT := sm8650
+else ifneq ($(filter $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+    QCOM_HARDWARE_VARIANT := sm8750
 else
     MSM_VIDC_TARGET_LIST := $(TARGET_BOARD_PLATFORM)
     QCOM_HARDWARE_VARIANT := $(TARGET_BOARD_PLATFORM)
@@ -61,18 +63,21 @@ endif
 ifneq ($(USE_DEVICE_SPECIFIC_DATA_IPA_CFG_MGR),true)
     ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
         PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/data-ipa-cfg-mgr
-    else ifneq ($(filter $(UM_5_10_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-        PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/sm8450/data-ipa-cfg-mgr
-    else ifneq ($(filter $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-        PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/sm8550/data-ipa-cfg-mgr
-    else ifneq ($(filter $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-        PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/sm8650/data-ipa-cfg-mgr
+    else
+        PRODUCT_SOONG_NAMESPACES += $(QCOM_SOONG_NAMESPACE)/data-ipa-cfg-mgr
     endif
 endif
 
 # Add dataservices to PRODUCT_SOONG_NAMESPACES if needed
 ifneq ($(USE_DEVICE_SPECIFIC_DATASERVICES),true)
     PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/dataservices
+endif
+
+# Add thermal HAL to PRODUCT_SOONG_NAMESPACES
+ifneq ($(filter $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+    PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/thermal
+else
+    PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/thermal-legacy-um
 endif
 
 # Add wlan to PRODUCT_SOONG_NAMESPACES
