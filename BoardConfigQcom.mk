@@ -10,6 +10,26 @@ ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
 endif
 
 # Configure audio HAL features
+ifeq ($(AUDIO_FEATURE_ENABLED_CIRRUS_CALIBRATION_RESISTANCE),true)
+    $(call soong_config_set,qtiaudio,cirrus_calibration_resistance,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_AGM_HIDL),true)
+    $(call soong_config_set,qtiaudio,feature_agm_hidl,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_DISABLED_DTS_EAGLE),true)
+    $(call soong_config_set,qtiaudio,feature_disabled_dts_eagle,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_DYNAMIC_SR),true)
+    $(call soong_config_set,qtiaudio,feature_dynamic_sr,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_EC_REF_CAPTURE),true)
+    $(call soong_config_set,qtiaudio,feature_ec_ref_capture,true)
+endif
+
 ifeq ($(AUDIO_FEATURE_ENABLED_EXT_AMPLIFIER),true)
     $(call soong_config_set,qtiaudio,feature_ext_amplifier,true)
 endif
@@ -34,12 +54,36 @@ ifeq ($(AUDIO_FEATURE_ENABLED_INSTANCE_ID),true)
     $(call soong_config_set,qtiaudio,feature_instance_id,true)
 endif
 
+ifeq ($(AUDIO_FEATURE_ENABLED_LSM_HIDL),true)
+    $(call soong_config_set,qtiaudio,feature_lsm_hidl,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_MCS),true)
+    $(call soong_config_set,qtiaudio,feature_mcs,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_PAL_HIDL),true)
+    $(call soong_config_set,qtiaudio,feature_pal_hidl,true)
+endif
+
 ifeq ($(BOARD_SUPPORTS_SOUND_TRIGGER),true)
     $(call soong_config_set,qtiaudio,feature_sound_trigger,true)
 endif
 
 ifeq ($(BOARD_SUPPORTS_SOUND_TRIGGER_HAL),true)
     $(call soong_config_set,qtiaudio,feature_sound_trigger,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_TRUE_STEREO),true)
+    $(call soong_config_set,qtiaudio,feature_true_stereo,true)
+endif
+
+ifneq ($(TARGET_PAL_SPKR_PROTECTION_PATH),)
+    $(call soong_config_set,qtiaudio,pal_spkr_protection_path,$(TARGET_PAL_SPKR_PROTECTION_PATH))
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_ULTRASOUND_PROXIMITY),true)
+    $(call soong_config_set,qtiaudio,ultrasound_proximity,true)
 endif
 
 # Add qtidisplay to soong config namespaces
