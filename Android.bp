@@ -3,6 +3,26 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+soong_config_module_type {
+    name: "android_hardware_qtiaudio_config_default",
+    module_type: "cc_defaults",
+    config_namespace: "android_hardware_audio",
+    bool_variables: [
+        "run_64bit",
+    ],
+    properties: ["compile_multilib"],
+}
+
+android_hardware_qtiaudio_config_default {
+    name: "android_hardware_qtiaudio_config_defaults",
+
+    soong_config_variables: {
+        run_64bit: {
+            compile_multilib: "64",
+        },
+    },
+}
+
 install_symlink {
     name: "rfs_apq_gnss_hlos_symlink",
     vendor: true,
