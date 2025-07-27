@@ -1,6 +1,0 @@
-cc_binary_host {
-    // Hybrid v1/v2 dtbTool. Use a different name to avoid conflicts with copies in device repos
-    name: "dtbToolCM",
-    cflags: [ "-Wall" ],
-    srcs: [ "dtbtool.c" ],
-}
